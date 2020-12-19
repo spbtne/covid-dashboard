@@ -13,7 +13,7 @@
 }
 
 @media (max-width: 1300px) and (min-width: 450px) {
-  .country-item-wrapper {
+  .country-recoveredCases-wrapper {
     flex-direction: column;
     align-items: center;
   }
