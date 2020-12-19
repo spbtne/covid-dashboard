@@ -5,18 +5,18 @@ import CasesByCountry from "./leftStatBlock/CasesByCountry/CasesByCountry";
 import "./App.css";
 
 function App() {
+  const [infectedAmount, setAmount] = useState([]);
+  const [countriesArray, setCountries] = useState([]);
+
   useEffect(() => {
-    const gettingSummary = async () => {
-      const api_url = await fetch("https://api.covid19api.com/summary");
-      const dataSummary = await api_url.json();
+    const getData = async () => {
+      const response = await fetch("https://api.covid19api.com/summary");
+      const dataSummary = await response.json();
       setAmount(dataSummary.Global.TotalConfirmed);
       setCountries(dataSummary.Countries);
     };
-    gettingSummary();
-  });
-
-  const [infectedAmount, setAmount] = useState([]);
-  const [countriesArray, setCountries] = useState([]);
+    getData();
+  }, []);
 
   return (
     <div className="App">
