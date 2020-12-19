@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import GlobalAmount from "./leftStatBlock/GlobalAmount/GlobalAmount";
 import CasesByCountry from "./leftStatBlock/CasesByCountry/CasesByCountry";
-
 import "./App.css";
+import Header from "./header/header";
 
 function App() {
+
   const [infectedAmount, setAmount] = useState([]);
   const [countriesArray, setCountries] = useState([]);
 
@@ -21,7 +22,7 @@ function App() {
   return (
     <div className="App">
       <header className="header container">
-        <h1 className="header-title">Covid 19 statistic</h1>
+          <Header/>
       </header>
       <main className="main container">
         <div className="infected">
@@ -31,6 +32,7 @@ function App() {
           <div className="country">
             <CasesByCountry gettingCountries={countriesArray} />
           </div>
+
         </div>
         <div className="map">map</div>
         <div className="day-statistic">
