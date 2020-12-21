@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import GlobalAmount from "./leftStatBlock/GlobalAmount/GlobalAmount";
 import CasesByCountry from "./leftStatBlock/CasesByCountry/CasesByCountry";
 import DeathCases from "./rightStatBlock/DeathCases/DeathCases";
@@ -7,21 +7,28 @@ import "./App.css";
 import Header from "./header/header";
 
 function App() {
-  const [infectedAmount, setInfectedAmount] = useState([]);
-  const [deathsAmount, setDeathsAmount] = useState([]);
-  const [recoveredAmount, setRecoveredAmount] = useState([]);
-  const [countriesArray, setCountries] = useState([]);
+  const [globalData, setGlobalData] = useState([]);
+  const [countriesData, setCountriesData] = useState([]);
 
   useEffect(() => {
-    const getData = async () => {
-      const response = await fetch("https://api.covid19api.com/summary");
+    const getGlobalData = async () => {
+      const response = await fetch("https://disease.sh/v3/covid-19/all");
       const dataSummary = await response.json();
-      setInfectedAmount(dataSummary.Global.TotalConfirmed);
-      setCountries(dataSummary.Countries);
-      setDeathsAmount(dataSummary.Global.TotalDeaths);
-      setRecoveredAmount(dataSummary.Global.TotalRecovered);
+
+      setGlobalData(dataSummary);
     };
-    getData();
+
+    getGlobalData();
+  }, []);
+
+  useEffect(() => {
+    const getCountriesData = async () => {
+      const response = await fetch("https://disease.sh/v3/covid-19/countries");
+      const countriesData = await response.json();
+      setCountriesData(countriesData);
+    };
+
+    getCountriesData();
   }, []);
 
   return (
@@ -32,10 +39,19 @@ function App() {
       <main className="main container">
         <div className="infected">
           <div className="global">
-            <GlobalAmount gettingAmount={infectedAmount} />
+            <GlobalAmount
+              getAllCases={globalData.cases}
+              getAllCasesToday={globalData.todayCases}
+            />
           </div>
           <div className="country">
-            <CasesByCountry gettingCountries={countriesArray} />
+            <CasesByCountry getCountriesData={countriesData} />
+          </div>
+          <div className="period-buttons-wrapper">
+            <button className="period-buttons-total button button--active">
+              Total
+            </button>
+            <button className="period-buttons-today button">Today</button>
           </div>
         </div>
         <div className="map">map</div>
@@ -43,14 +59,16 @@ function App() {
           <div className="day-statistic-data">
             <div className="deaths">
               <DeathCases
-                gettingCountriesDeaths={countriesArray}
-                getDeathsAmount={deathsAmount}
+                getCountriesDeaths={countriesData}
+                getGlobalDeaths={globalData.deaths}
+                getGlobalDeathsToday={globalData.todayDeaths}
               />
             </div>
             <div className="lives">
               <RecoveredCases
-                gettingCountriesRecovered={countriesArray}
-                getRecoveredAmount={recoveredAmount}
+                getCountriesDataRecovered={countriesData}
+                getGlobalRecovered={globalData.recovered}
+                getGlobalRecoveredToday={globalData.todayRecovered}
               />
             </div>
           </div>
