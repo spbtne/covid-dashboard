@@ -17,13 +17,13 @@ function Header() {
         <span className="burger-line"></span>
         <ul className="menu__list hidden">
           <li className="menu__item">
-            <a href="#">Some link</a>
+            <a href="./">Some link</a>
           </li>
           <li className="menu__item">
-            <a href="#">Some link</a>
+            <a href="./">Some link</a>
           </li>
           <li className="menu__item">
-            <a href="#">Some link</a>
+            <a href="./">Some link</a>
           </li>
         </ul>
       </div>

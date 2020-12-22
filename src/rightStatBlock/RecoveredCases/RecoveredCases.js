@@ -2,7 +2,11 @@ import React from "react";
 import "./recoveredCases.css";
 import CountryItem from "./CountryItem";
 
-function RecoveredCases({ getCountriesDataRecovered, getGlobalRecovered }) {
+function RecoveredCases({
+  getCountriesDataRecovered,
+  getGlobalRecovered,
+  isTodayData,
+}) {
   let readableAmount;
   if (getGlobalRecovered === undefined) {
     readableAmount = false;
@@ -17,7 +21,13 @@ function RecoveredCases({ getCountriesDataRecovered, getGlobalRecovered }) {
       <p className="global-recoveredAmount">{readableAmount}</p>
       <ul className="country-recoveredCases-list">
         {getCountriesDataRecovered.map((countryItem, index) => {
-          return <CountryItem getCountryData={countryItem} key={index} />;
+          return (
+            <CountryItem
+              getCountryData={countryItem}
+              key={index}
+              isTodayData={isTodayData}
+            />
+          );
         })}
       </ul>
     </div>

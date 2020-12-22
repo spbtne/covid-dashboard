@@ -1,14 +1,22 @@
 import React from "react";
 import "./countryItem.css";
 
-function CountryItem({ getCountryData }) {
+function CountryItem({ getCountryData, isTodayData }) {
   let readableAmount;
-  if (getCountryData.recovered === undefined) {
-    readableAmount = false;
+  if (isTodayData) {
+    console.log(isTodayData);
+    getCountryData.todayRecovered === undefined
+      ? (readableAmount = false)
+      : (readableAmount = getCountryData.todayRecovered
+          .toString()
+          .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 "));
   } else {
-    readableAmount = getCountryData.cases
-      .toString()
-      .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
+    console.log(isTodayData);
+    getCountryData.recovered === undefined
+      ? (readableAmount = false)
+      : (readableAmount = getCountryData.recovered
+          .toString()
+          .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 "));
   }
   return (
     <li className="country-recoveredCases-wrapper">

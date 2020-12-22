@@ -8,7 +8,12 @@ import Header from "./header/header";
 
 function App() {
   const [globalData, setGlobalData] = useState([]);
+  const [isToday, setIsToday] = useState([]);
+
   const [countriesData, setCountriesData] = useState([]);
+  const [worldDataCases, setWorldDataCases] = useState([]);
+  const [worldDataDeaths, setWorldDataDeaths] = useState([]);
+  const [worldDataRecovered, setWorldDataRecovered] = useState([]);
 
   useEffect(() => {
     const getGlobalData = async () => {
@@ -16,6 +21,10 @@ function App() {
       const dataSummary = await response.json();
 
       setGlobalData(dataSummary);
+      setWorldDataCases(dataSummary.cases);
+      setWorldDataDeaths(dataSummary.deaths);
+      setWorldDataRecovered(dataSummary.recovered);
+      setIsToday(false);
     };
 
     getGlobalData();
@@ -39,19 +48,49 @@ function App() {
       <main className="main container">
         <div className="infected">
           <div className="global">
-            <GlobalAmount
-              getAllCases={globalData.cases}
-              getAllCasesToday={globalData.todayCases}
-            />
+            <GlobalAmount getAllCases={worldDataCases} />
           </div>
           <div className="country">
-            <CasesByCountry getCountriesData={countriesData} />
+            <CasesByCountry
+              getCountriesData={countriesData}
+              isTodayData={isToday}
+            />
           </div>
           <div className="period-buttons-wrapper">
-            <button className="period-buttons-total button button--active">
+            <button
+              className="period-buttons-total button button--active"
+              onClick={() => {
+                setWorldDataCases(globalData.cases);
+                setWorldDataDeaths(globalData.deaths);
+                setWorldDataRecovered(globalData.recovered);
+                setIsToday(false);
+                document
+                  .querySelector(".period-buttons-total")
+                  .classList.toggle("button--active");
+                document
+                  .querySelector(".period-buttons-today")
+                  .classList.toggle("button--active");
+              }}
+            >
               Total
             </button>
-            <button className="period-buttons-today button">Today</button>
+            <button
+              className="period-buttons-today button"
+              onClick={() => {
+                setWorldDataCases(globalData.todayCases);
+                setWorldDataDeaths(globalData.todayDeaths);
+                setWorldDataRecovered(globalData.todayRecovered);
+                setIsToday(true);
+                document
+                  .querySelector(".period-buttons-total")
+                  .classList.toggle("button--active");
+                document
+                  .querySelector(".period-buttons-today")
+                  .classList.toggle("button--active");
+              }}
+            >
+              Today
+            </button>
           </div>
         </div>
         <div className="map">map</div>
@@ -60,15 +99,15 @@ function App() {
             <div className="deaths">
               <DeathCases
                 getCountriesDeaths={countriesData}
-                getGlobalDeaths={globalData.deaths}
-                getGlobalDeathsToday={globalData.todayDeaths}
+                getGlobalDeaths={worldDataDeaths}
+                isTodayData={isToday}
               />
             </div>
             <div className="lives">
               <RecoveredCases
                 getCountriesDataRecovered={countriesData}
-                getGlobalRecovered={globalData.recovered}
-                getGlobalRecoveredToday={globalData.todayRecovered}
+                getGlobalRecovered={worldDataRecovered}
+                isTodayData={isToday}
               />
             </div>
           </div>
