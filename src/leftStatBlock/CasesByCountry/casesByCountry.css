@@ -1,6 +1,7 @@
 .country-cases {
   text-align: center;
   padding: 10px;
+  
 }
 
 .country-cases-title {
@@ -15,9 +16,8 @@
   list-style: none;
   padding: 0;
   font-size: 14px;
-  
+  min-height: 50px;
 }
-
 
 @media (max-width: 1200px) and (min-width: 768px) {
   .country-cases {
