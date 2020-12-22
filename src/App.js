@@ -48,45 +48,37 @@ function App() {
       <main className="main container">
         <div className="infected">
           <div className="global">
-            <GlobalAmount getAllCases={worldDataCases} />
+            {worldDataCases !== undefined ? (
+              <GlobalAmount globalCases={worldDataCases} />
+            ) : null}
           </div>
           <div className="country">
-            <CasesByCountry
-              getCountriesData={countriesData}
-              isTodayData={isToday}
-            />
+            {countriesData !== undefined ? (
+              <CasesByCountry
+                countriesArr={countriesData}
+                todayStatus={isToday}
+              />
+            ) : null}
           </div>
           <div className="period-buttons-wrapper">
             <button
-              className="period-buttons-total button button--active"
+              className={isToday ? `button` : `button button--active`}
               onClick={() => {
                 setWorldDataCases(globalData.cases);
                 setWorldDataDeaths(globalData.deaths);
                 setWorldDataRecovered(globalData.recovered);
                 setIsToday(false);
-                document
-                  .querySelector(".period-buttons-total")
-                  .classList.toggle("button--active");
-                document
-                  .querySelector(".period-buttons-today")
-                  .classList.toggle("button--active");
               }}
             >
               Total
             </button>
             <button
-              className="period-buttons-today button"
+              className={isToday ? `button button--active` : `button`}
               onClick={() => {
                 setWorldDataCases(globalData.todayCases);
                 setWorldDataDeaths(globalData.todayDeaths);
                 setWorldDataRecovered(globalData.todayRecovered);
                 setIsToday(true);
-                document
-                  .querySelector(".period-buttons-total")
-                  .classList.toggle("button--active");
-                document
-                  .querySelector(".period-buttons-today")
-                  .classList.toggle("button--active");
               }}
             >
               Today
@@ -97,18 +89,22 @@ function App() {
         <div className="day-statistic">
           <div className="day-statistic-data">
             <div className="deaths">
-              <DeathCases
-                getCountriesDeaths={countriesData}
-                getGlobalDeaths={worldDataDeaths}
-                isTodayData={isToday}
-              />
+              {countriesData !== undefined ? (
+                <DeathCases
+                  countriesDeathsArr={countriesData}
+                  globalDeaths={worldDataDeaths}
+                  todayStatus={isToday}
+                />
+              ) : null}
             </div>
             <div className="lives">
-              <RecoveredCases
-                getCountriesDataRecovered={countriesData}
-                getGlobalRecovered={worldDataRecovered}
-                isTodayData={isToday}
-              />
+              {countriesData !== undefined ? (
+                <RecoveredCases
+                  countriesRecoveredArr={countriesData}
+                  globalRecovered={worldDataRecovered}
+                  todayStatus={isToday}
+                />
+              ) : null}
             </div>
           </div>
           <div className="graph">graph</div>

@@ -1,31 +1,27 @@
 import React from "react";
 import "./countryItem.css";
 
-function CountryItem({ getCountryData, isTodayData }) {
+function CountryItem({ countryDataObj, todayStatus }) {
   let readableAmount;
-  if (isTodayData) {
-    getCountryData.todayDeaths === undefined
-      ? (readableAmount = false)
-      : (readableAmount = getCountryData.todayDeaths
-          .toString()
-          .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 "));
+  if (todayStatus) {
+    readableAmount = countryDataObj.todayDeaths
+      .toString()
+      .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
   } else {
-    getCountryData.deaths === undefined
-      ? (readableAmount = false)
-      : (readableAmount = getCountryData.deaths
-          .toString()
-          .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 "));
+    readableAmount = countryDataObj.deaths
+      .toString()
+      .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
   }
   return (
     <li className="country-deathCases-wrapper">
       <div className="country-flag">
         <img
-          src={getCountryData.countryInfo.flag}
+          src={countryDataObj.countryInfo.flag}
           width="18"
           alt="national-flag"
         ></img>
       </div>
-      <div className="country-title">{getCountryData.country}</div>
+      <div className="country-title">{countryDataObj.country}</div>
       <div className="country-deathAmount">
         <div className="amount-wrapper">{readableAmount}</div>
       </div>
