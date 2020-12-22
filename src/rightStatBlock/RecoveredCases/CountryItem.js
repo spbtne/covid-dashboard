@@ -4,14 +4,12 @@ import "./countryItem.css";
 function CountryItem({ getCountryData, isTodayData }) {
   let readableAmount;
   if (isTodayData) {
-    console.log(isTodayData);
     getCountryData.todayRecovered === undefined
       ? (readableAmount = false)
       : (readableAmount = getCountryData.todayRecovered
           .toString()
           .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 "));
   } else {
-    console.log(isTodayData);
     getCountryData.recovered === undefined
       ? (readableAmount = false)
       : (readableAmount = getCountryData.recovered
