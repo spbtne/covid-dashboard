@@ -5,6 +5,7 @@ import DeathCases from "./rightStatBlock/DeathCases/DeathCases";
 import RecoveredCases from "./rightStatBlock/RecoveredCases/RecoveredCases";
 import "./App.css";
 import Header from "./header/header";
+import BarChart from "./graph/BarChart";
 
 function App() {
   const [globalData, setGlobalData] = useState([]);
@@ -107,10 +108,9 @@ function App() {
               ) : null}
             </div>
           </div>
-          <div className="graph">graph</div>
+          <BarChart />
         </div>
       </main>
-      <footer className="footer container">RSS</footer>
     </div>
   );
 }
