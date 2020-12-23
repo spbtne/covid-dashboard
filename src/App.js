@@ -5,6 +5,7 @@ import DeathCases from "./rightStatBlock/DeathCases/DeathCases";
 import RecoveredCases from "./rightStatBlock/RecoveredCases/RecoveredCases";
 import "./App.css";
 import Header from "./header/header";
+import MapBlock from './mapBlock/mapBlock'
 import BarChart from "./graph/BarChart";
 
 function App() {
@@ -40,6 +41,24 @@ function App() {
 
     getCountriesData();
   }, []);
+
+  function maxCases (countriesData) {
+    let max = 0;
+    countriesData.map((item) => {
+      if (item.cases > max) {
+        max = item.cases;
+      }
+    })
+    return max;
+  }
+
+  const max = maxCases(countriesData);
+
+  countriesData.map((item) => {
+    if (item.cases === max) {
+    item.markerSize = 700000;
+    } else {item.markerSize = item.cases / max * 700000}
+  })
 
   return (
     <div className="App">
@@ -86,7 +105,13 @@ function App() {
             </button>
           </div>
         </div>
-        <div className="map">map</div>
+        <div className="map">
+          {countriesData !== undefined ? (
+              <MapBlock 
+                countriesArr={countriesData}
+              />
+            ) : null}
+        </div>
         <div className="day-statistic">
           <div className="day-statistic-data">
             <div className="deaths">
