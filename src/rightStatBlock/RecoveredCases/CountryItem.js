@@ -1,28 +1,28 @@
 import React from "react";
 import "./countryItem.css";
 
-function CountryItem({ countryObj, todayStatus }) {
+function CountryItem({ countryDataObj, todayStatus }) {
   let readableAmount;
   if (todayStatus) {
-    readableAmount = countryObj.todayCases
+    readableAmount = countryDataObj.todayRecovered
       .toString()
       .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
   } else {
-    readableAmount = countryObj.cases
+    readableAmount = countryDataObj.recovered
       .toString()
       .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
   }
   return (
-    <li className="country-item-wrapper">
+    <li className="country-recoveredCases-wrapper">
       <div className="country-flag">
         <img
-          src={countryObj.countryInfo.flag}
+          src={countryDataObj.countryInfo.flag}
           width="18"
           alt="national-flag"
         ></img>
       </div>
-      <div className="country-title">{countryObj.country}</div>
-      <div className="country-infectedAmount">
+      <div className="country-title">{countryDataObj.country}</div>
+      <div className="country-recoveredAmount">
         <div className="amount-wrapper">{readableAmount}</div>
       </div>
     </li>

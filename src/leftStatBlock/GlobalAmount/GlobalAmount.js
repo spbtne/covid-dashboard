@@ -1,8 +1,8 @@
 import React from "react";
 import "./globalAmount.css";
 
-function GlobalAmount(props) {
-  const readableAmount = props.gettingAmount
+function GlobalAmount({ globalCases }) {
+  let readableAmount = globalCases
     .toString()
     .replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
   return (

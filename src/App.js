@@ -1,47 +1,141 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import GlobalAmount from "./leftStatBlock/GlobalAmount/GlobalAmount";
 import CasesByCountry from "./leftStatBlock/CasesByCountry/CasesByCountry";
-
+import DeathCases from "./rightStatBlock/DeathCases/DeathCases";
+import RecoveredCases from "./rightStatBlock/RecoveredCases/RecoveredCases";
 import "./App.css";
+import Header from "./header/header";
+import MapBlock from './mapBlock/mapBlock'
+import BarChart from "./graph/BarChart";
 
 function App() {
-  const [infectedAmount, setAmount] = useState([]);
-  const [countriesArray, setCountries] = useState([]);
+  const [globalData, setGlobalData] = useState([]);
+  const [isToday, setIsToday] = useState([]);
+
+  const [countriesData, setCountriesData] = useState([]);
+  const [worldDataCases, setWorldDataCases] = useState([]);
+  const [worldDataDeaths, setWorldDataDeaths] = useState([]);
+  const [worldDataRecovered, setWorldDataRecovered] = useState([]);
 
   useEffect(() => {
-    const getData = async () => {
-      const response = await fetch("https://api.covid19api.com/summary");
+    const getGlobalData = async () => {
+      const response = await fetch("https://disease.sh/v3/covid-19/all");
       const dataSummary = await response.json();
-      setAmount(dataSummary.Global.TotalConfirmed);
-      setCountries(dataSummary.Countries);
+
+      setGlobalData(dataSummary);
+      setWorldDataCases(dataSummary.cases);
+      setWorldDataDeaths(dataSummary.deaths);
+      setWorldDataRecovered(dataSummary.recovered);
+      setIsToday(false);
     };
-    getData();
+
+    getGlobalData();
   }, []);
+
+  useEffect(() => {
+    const getCountriesData = async () => {
+      const response = await fetch("https://disease.sh/v3/covid-19/countries");
+      const countriesData = await response.json();
+      setCountriesData(countriesData);
+    };
+
+    getCountriesData();
+  }, []);
+
+  function maxCases (countriesData) {
+    let max = 0;
+    countriesData.map((item) => {
+      if (item.cases > max) {
+        max = item.cases;
+      }
+    })
+    return max;
+  }
+
+  const max = maxCases(countriesData);
+
+  countriesData.map((item) => {
+    if (item.cases === max) {
+    item.markerSize = 700000;
+    } else {item.markerSize = item.cases / max * 700000}
+  })
 
   return (
     <div className="App">
       <header className="header container">
-        <h1 className="header-title">Covid 19 statistic</h1>
+        <Header />
       </header>
       <main className="main container">
         <div className="infected">
           <div className="global">
-            <GlobalAmount gettingAmount={infectedAmount} />
+            {worldDataCases !== undefined ? (
+              <GlobalAmount globalCases={worldDataCases} />
+            ) : null}
           </div>
           <div className="country">
-            <CasesByCountry gettingCountries={countriesArray} />
+            {countriesData !== undefined ? (
+              <CasesByCountry
+                countriesArr={countriesData}
+                todayStatus={isToday}
+              />
+            ) : null}
+          </div>
+          <div className="period-buttons-wrapper">
+            <button
+              className={isToday ? `button` : `button button--active`}
+              onClick={() => {
+                setWorldDataCases(globalData.cases);
+                setWorldDataDeaths(globalData.deaths);
+                setWorldDataRecovered(globalData.recovered);
+                setIsToday(false);
+              }}
+            >
+              Total
+            </button>
+            <button
+              className={isToday ? `button button--active` : `button`}
+              onClick={() => {
+                setWorldDataCases(globalData.todayCases);
+                setWorldDataDeaths(globalData.todayDeaths);
+                setWorldDataRecovered(globalData.todayRecovered);
+                setIsToday(true);
+              }}
+            >
+              Today
+            </button>
           </div>
         </div>
-        <div className="map">map</div>
+        <div className="map">
+          {countriesData !== undefined ? (
+              <MapBlock 
+                countriesArr={countriesData}
+              />
+            ) : null}
+        </div>
         <div className="day-statistic">
           <div className="day-statistic-data">
-            <div className="deaths">deaths</div>
-            <div className="lives">lives</div>
+            <div className="deaths">
+              {countriesData !== undefined ? (
+                <DeathCases
+                  countriesDeathsArr={countriesData}
+                  globalDeaths={worldDataDeaths}
+                  todayStatus={isToday}
+                />
+              ) : null}
+            </div>
+            <div className="lives">
+              {countriesData !== undefined ? (
+                <RecoveredCases
+                  countriesRecoveredArr={countriesData}
+                  globalRecovered={worldDataRecovered}
+                  todayStatus={isToday}
+                />
+              ) : null}
+            </div>
           </div>
-          <div className="graph">graph</div>
+          <BarChart />
         </div>
       </main>
-      <footer className="footer container">RSS</footer>
     </div>
   );
 }
